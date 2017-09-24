@@ -202,3 +202,99 @@ p {
 #hint:active {
  color: #ede7f6;
 }
+/******************************/
+/*ipad portrait*/
+@media screen
+and (orientation: portrait)
+and (min-width: 760px) {
+	.l-wrap {
+		margin-left: 50px;
+		margin-right: 50px;
+	}
+	label {
+		font-size: 1.5em;
+	}
+	button:
+}
+
+@media screen
+and (orientation: landscape) {
+
+  /*iphone 5*/
+	.l-wrap {
+		top: 50%;
+		margin: 0 auto;
+		height: 100%;
+	}
+  .col-1 {
+		float: left;
+		width: 60%;
+		height: 100%;
+	}
+
+	.col-2 {
+		float: left;
+		width: 40%;
+		height: 100%;
+	}
+
+	.title {
+		font-size: 2em;
+	}
+
+  /*ipads and larger: positioning and enlargement*/
+  @media screen
+  and (min-height: 710px) {
+		.col-1 {
+			width: 65%;
+		}
+
+		.col-2 {
+			width: 35%;
+		}
+
+    .l-wrap {
+		  height: 60%;
+		  margin: 0 auto;
+	  }
+
+		.title {
+			font-size: 3em;
+			margin-top: 20px;
+		}
+
+		.square {
+      padding: 15px;
+		}
+
+		.margin-left {
+
+		}
+
+		.letter {
+		font-size: 1.6em;
+		}
+
+		.info {
+			font-size: 2em;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+
+		label {
+			font-size: 1.6em;
+			margin-top: 40px;
+		}
+
+		button {
+			width: 100px;
+			height: 50px;
+			font-size: 1.5em;
+		}
+
+		p {
+			font-size: 1.3em;
+			margin-top: 50px;
+		}
+  }
+}
