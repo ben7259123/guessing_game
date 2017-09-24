@@ -84,7 +84,7 @@ body {
   width: 100%;
   /*height: px;*/
   background: #6a1b9a;
-  padding-bottom: 25px;
+  padding-bottom: 10px;
 
 }
 
@@ -114,7 +114,7 @@ background: #9933CC;
 
 .letter-input {
   text-align: center;
-  padding-top: 20px;
+  padding-top: 50px;
 
 }
 
@@ -150,4 +150,22 @@ button {
   font-weight: bold;
   font-variant: small-caps;
   font-size: 1.2em;
+}
+
+p {
+  text-align: center;
+  margin-top: 50px;
+}
+
+#hint {
+  text-decoration: underline;
+}
+
+/*ADD CLASS TO HTML FOR MOBILE PHONES TO DISABLE*/
+#hint:hover {
+  color: #ba68c8;
+}
+
+#hint:active {
+ color: #ede7f6;
 }
