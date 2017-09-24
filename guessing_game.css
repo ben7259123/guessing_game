@@ -202,11 +202,20 @@ p {
 #hint:active {
  color: #ede7f6;
 }
+
+button:hover {
+	background: #ab47bc;
+}
+
+button:active {
+	background: #ba68c8;
+}
+
 /******************************/
 /*ipad portrait*/
 @media screen
 and (orientation: portrait)
-and (min-width: 760px) {
+and (min-width: 600px) {
 	.l-wrap {
 		margin-left: 50px;
 		margin-right: 50px;
@@ -214,13 +223,12 @@ and (min-width: 760px) {
 	label {
 		font-size: 1.5em;
 	}
-	button:
 }
 
 @media screen
 and (orientation: landscape) {
 
-  /*iphone 5*/
+  /*iphone 5 onwards through ipad*/
 	.l-wrap {
 		top: 50%;
 		margin: 0 auto;
@@ -242,9 +250,15 @@ and (orientation: landscape) {
 		font-size: 2em;
 	}
 
-  /*ipads and larger: positioning and enlargement*/
+  /*@media screen
+	and (min-width: 530px) {
+		.l-wrap {
+			height: 80%;
+		}
+	}*/
+
   @media screen
-  and (min-height: 710px) {
+  and (min-height: 515px) {
 		.col-1 {
 			width: 65%;
 		}
@@ -253,26 +267,22 @@ and (orientation: landscape) {
 			width: 35%;
 		}
 
-    .l-wrap {
-		  height: 60%;
-		  margin: 0 auto;
-	  }
+		.l-wrap {
+			height: 60%;
+			margin: 0 auto;
+		}
 
 		.title {
 			font-size: 3em;
-			margin-top: 20px;
+			padding-bottom: 70px;
 		}
 
 		.square {
-      padding: 15px;
-		}
-
-		.margin-left {
-
+			padding: 15px;
 		}
 
 		.letter {
-		font-size: 1.6em;
+			font-size: 1.6em;
 		}
 
 		.info {
@@ -283,7 +293,7 @@ and (orientation: landscape) {
 
 		label {
 			font-size: 1.6em;
-			margin-top: 40px;
+			margin-top: 20px;
 		}
 
 		button {
@@ -294,7 +304,10 @@ and (orientation: landscape) {
 
 		p {
 			font-size: 1.3em;
-			margin-top: 50px;
+			margin-top: 30px;
 		}
-  }
+		.letter-input {
+			padding-top: 0;
+		}
+	}
 }
