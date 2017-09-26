@@ -32,10 +32,12 @@ var gameModel = (function() {
       {name: 'Woolf', hint: 'To The Lighthouse'},
       {name: 'Wilde', hint: 'Picture of Dorian Gray'},
       {name: 'Orwell', hint: '1984'},
-      {name: 'Joyce', hint: 'Ulysses'}
+      {name: 'Joyce', hint: 'Ulysses'},
+      {name: 'Austen', hint: 'Pride and Prejudice'}
     ],
     randomSelect: function() {
-      var newAnswer = this.selection[Math.floor(Math.random() * this.selection.length)];
+      var newAnswer =
+      this.selection[Math.floor(Math.random() * this.selection.length)];
       return newAnswer;
     }
   };
@@ -51,6 +53,52 @@ var gameModel = (function() {
 })();
 
 var gameUI = (function() {
+  var displaySquares = function(wordLength) {
+    for (var i = 0; i < wordLength; i++) {
+      document.querySelector('.squares-container')
+      .insertAdjacentHTML('beforeend', '<div class="square margin-left"></div>');
+    }
+  };
+
+  var addLettersToSquares = function(word) {
+    var letterContainers = document.querySelectorAll('.square');
+    for (var i = 0; i < letterContainers.length; i++) {
+      var letterHTML = '<span class="letter">' + word.charAt(i) + '</span';
+      letterContainers[i].innerHTML = letterHTML;
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return {
+    displayBoard: function(name) {
+      displaySquares(name.length);
+      addLettersToSquares(name);
+    },
+    displayHint: function() {
+    },
+    displayGuessesLeft: function() {
+    },
+    displayLetters: function() {
+    },
+    displayGameMessage: function() {
+
+    },
+    /*validateEntry:*/
+
+  }
+
+
 
 })();
 
