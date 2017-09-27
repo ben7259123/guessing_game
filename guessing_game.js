@@ -34,7 +34,8 @@ var gameModel = (function() {
       {name: 'Wilde', hint: 'Picture of Dorian Gray'},
       {name: 'Orwell', hint: '1984'},
       {name: 'Joyce', hint: 'Ulysses'},
-      {name: 'Austen', hint: 'Pride and Prejudice'}
+      {name: 'Austen', hint: 'Pride and Prejudice'},
+      {name: 'Marquez', hint: '100 Years of Solitude'}
     ],
     randomSelect: function() {
       var newAnswer =
@@ -86,10 +87,10 @@ var gameUI = (function() {
     document.getElementById(id).textContent = content;
   };
 
-  var changeVisibility= function(indexes) {
-    var wordEls = document.querySelectorAll(domStrings.letter);
+  var displayMatches = function(indexes, allLetters) {
+    var letterEls = document.querySelectorAll(allLetters);
     indexes.forEach(function(index) {
-      wordEls[index].style.visibility = "visible";
+      letterEls[index].style.visibility = "visible";
     });
   };
 
@@ -97,6 +98,12 @@ var gameUI = (function() {
     var guessInput = document.getElementById(inputId);
     guessInput.value = '';
     guessInput.focus();
+  };
+
+  var displayAllLetters = function(domString) {
+    document.querySelectorAll(domString).forEach(function(letter) {
+      if (letter.style.visibility === 'hidden') letter.style.visibility = 'visible';
+    });
   };
 
   return {
@@ -113,22 +120,18 @@ var gameUI = (function() {
     displayGameMessage: function(message) {
       displayContent(domStrings.title, message);
     },
-    displayLetters: function(indexArray) {
-      changeVisibility(indexArray);
-    },
     returnDomStrings: function() {
       return domStrings;
     },
-    setupInput: function(id) {
-      setupInput(id);
-    }
+    displayMatches: displayMatches,
+    displayAllLetters: displayAllLetters,
+    setupInput: setupInput
   };
 })();
 
 
 var gameController = (function(userInterface, model) {
   var dom = userInterface.returnDomStrings();
-
 
   var setupEventListeners = function(gameInfo) {
     document.getElementById(dom.submitButton)
@@ -143,7 +146,7 @@ var gameController = (function(userInterface, model) {
          //if letter is in the word
           if (letterIndexes.length >= 1) {
             gameInfo.lettersLeft -= letterIndexes.length;
-            userInterface.displayLetters(letterIndexes);
+            userInterface.displayMatches(letterIndexes, dom.letter);
             //if there are no letters left to guess
             if (gameInfo.lettersLeft === 0) {
               userInterface.displayGameMessage('You Win');
@@ -156,6 +159,7 @@ var gameController = (function(userInterface, model) {
             //if no more guesses left
             if (gameInfo.guessesLeft === 0) {
               userInterface.displayGameMessage('Game Over');
+              userInterface.displayAllLetters(dom.letter);
               gameInfo.gameOver = true;
             }
           }
@@ -164,6 +168,10 @@ var gameController = (function(userInterface, model) {
       }
     }, false);
 
+    document.getElementById(dom.hintField)
+    .addEventListener('click', function() {
+      userInterface.displayHint(gameInfo.hint);
+    }, false);
 
   };
 
