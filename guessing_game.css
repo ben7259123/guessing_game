@@ -125,6 +125,7 @@ box-shadow: 13px 10px 10px -6px rgba(189,189,189,1);
 
 .letter {
   font-size: 1.2em;
+	font-family: courier;
 /*visibility: hidden;*/
 }
 
@@ -283,6 +284,7 @@ and (orientation: landscape) {
 
 		.letter {
 			font-size: 1.6em;
+			font-family: courier;
 		}
 
 		.info {
