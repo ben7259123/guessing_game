@@ -195,6 +195,18 @@ p {
   text-decoration: underline;
 }
 
+.end-game {
+	font-size: 1.5em;
+}
+
+.hide {
+	visibility: hidden;
+}
+
+.zero-padding {
+	padding-top: 0px;
+}
+
 /*ADD CLASS TO HTML FOR MOBILE PHONES TO DISABLE*/
 #hint:hover {
   color: #ba68c8;
@@ -251,12 +263,10 @@ and (orientation: landscape) {
 		font-size: 2em;
 	}
 
-  /*@media screen
-	and (min-width: 530px) {
-		.l-wrap {
-			height: 80%;
-		}
-	}*/
+	.input-padding {
+		padding-top: 50px;
+	}
+
 
   @media screen
   and (min-height: 515px) {
@@ -309,7 +319,7 @@ and (orientation: landscape) {
 			margin-top: 30px;
 		}
 		.letter-input {
-			padding-top: 0;
+			padding-top: 50px;
 		}
 	}
 }
