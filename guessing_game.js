@@ -63,7 +63,8 @@ var gameUI = (function() {
     title: 'title',
     letter: '.letter',
     submitButton: 'submit-button',
-    guessInput: 'guess-input'
+    guessInput: 'guess-input',
+    restartButton: '.restart-button'
   };
 
   var displaySquares = function(wordLength) {
@@ -134,15 +135,43 @@ var gameController = (function(userInterface, model) {
   var dom = userInterface.returnDomStrings();
 
   var setupEventListeners = function(gameInfo) {
-    document.getElementById(dom.submitButton)
-    .addEventListener('click', function() {
+
+    var hintHandler = function() {
+
+      userInterface.displayHint(gameInfo.hint);
+    };
+
+    var restartHandler = function(e) {
+
+      if (e.target.id === 'restart-button') {
+        //displayBeginning
+        document.querySelectorAll('.info, #hint-field').forEach(function(el) {
+          el.classList.remove('hide');
+        });
+        var letterInput = document.querySelector('.letter-input');
+        letterInput.classList.remove('zero-padding');
+        document.querySelector('.input-contents').style.display = "block";
+        document.getElementById('restart-field').innerHTML = '';
+        document.getElementById('restart-field').style.display = 'none';
+        document.querySelector('.squares-container').innerHTML = '';
+        document.querySelector('.title').textContent = "Guess the Author";
+        document.getElementById('hint-field').innerHTML =
+        '<p id="hint-field">click <span id="hint">here</span> for a hint</p>';
+        document.querySelector('body').removeEventListener('click', restartHandler, false);
+        //
+        playGame();
+      }
+    };
+
+    var submitHandler = function(e) {
       if (gameInfo.gameOver === false) {
+
         var enteredLetter = document.getElementById(dom.guessInput).value.toUpperCase();
         //if letter has not been guessed
         if (!gameInfo.checkGuessedLetters(enteredLetter)) {
           gameInfo.guessedLetters.push(enteredLetter);
 
-          var letterIndexes = gameInfo.searchForLetter(enteredLetter, gameInfo.name)
+          var letterIndexes = gameInfo.searchForLetter(enteredLetter, gameInfo.name);
          //if letter is in the word
           if (letterIndexes.length >= 1) {
             gameInfo.lettersLeft -= letterIndexes.length;
@@ -150,39 +179,80 @@ var gameController = (function(userInterface, model) {
             //if there are no letters left to guess
             if (gameInfo.lettersLeft === 0) {
               userInterface.displayGameMessage('You Win');
+              //display restart
+              document.querySelectorAll('.info, #hint-field').forEach(function(el) {
+                el.classList.add('hide');
+              });
+              var letterInput = document.querySelector('.letter-input');
+              letterInput.classList.add('zero-padding');
+              document.querySelector('.input-contents').style.display = "none";
+              var restartEl = document.getElementById('restart-field');
+              restartEl.style.display = 'block';
+
+              restartEl.innerHTML =
+              '<label class="restart-button">Click to start a new game:</label><button id="restart-button">restart</button>';
               gameInfo.gameOver = true;
+              //
             }
             //if letter is not in word
           } else if (letterIndexes.length === 0) {
+            console.log('foo');
             gameInfo.guessesLeft -= 1;
             userInterface.displayGuessesLeft(gameInfo.guessesLeft);
             //if no more guesses left
             if (gameInfo.guessesLeft === 0) {
+
+              document.getElementById('submit-button').removeEventListener('click', submitHandler, false);
               userInterface.displayGameMessage('Game Over');
               userInterface.displayAllLetters(dom.letter);
+              //insert
+              //display restart
+              document.querySelectorAll('.info, #hint-field').forEach(function(el) {
+                el.classList.add('hide');
+              });
+              var letterInput = document.querySelector('.letter-input');
+              letterInput.classList.add('zero-padding');
+              document.querySelector('.input-contents').style.display = "none";
+              var restartEl = document.getElementById('restart-field');
+              restartEl.style.display = 'block';
+
+              restartEl.innerHTML =
+              '<label class="restart-button">Click to start a new game:</label><button id="restart-button">restart</button>';
+              //end insert
               gameInfo.gameOver = true;
+
             }
           }
         }
-        userInterface.setupInput(dom.guessInput);
+       if (!gameInfo.gameOver) userInterface.setupInput(dom.guessInput);
       }
-    }, false);
+    };
+
+    document.getElementById(dom.submitButton)
+    .addEventListener('click', submitHandler, false);
 
     document.getElementById(dom.hintField)
-    .addEventListener('click', function() {
-      userInterface.displayHint(gameInfo.hint);
-    }, false);
+    .addEventListener('click', hintHandler, false);
+
+    document.querySelector('body')
+    .addEventListener('click', restartHandler, false);
 
   };
 
-  return {
-    init: function() {
-      var guessNumber = 5;
+  var playGame = function() {
+
+     var guessNumber = 1;
       var currentGame = model.createGame(model.selectAnswer(), guessNumber);
+      console.log(currentGame);
       userInterface.setupInput(dom.guessInput);
       userInterface.displayBoard(currentGame.name);
       userInterface.displayGuessesLeft(guessNumber);
       setupEventListeners(currentGame);
+  };
+
+  return {
+    init: function() {
+     playGame();
     }
   };
 })(gameUI, gameModel);
