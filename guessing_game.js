@@ -1,3 +1,4 @@
+
 var gameModel = (function() {
   var Game = function(answer, numOfGuesses) {
     this.name = answer.name.toUpperCase();
@@ -135,14 +136,11 @@ var gameController = (function(userInterface, model) {
   var dom = userInterface.returnDomStrings();
 
   var setupEventListeners = function(gameInfo) {
-
     var hintHandler = function() {
-
       userInterface.displayHint(gameInfo.hint);
     };
 
     var restartHandler = function(e) {
-
       if (e.target.id === 'restart-button') {
         //displayBeginning
         document.querySelectorAll('.info, #hint-field').forEach(function(el) {
@@ -164,7 +162,7 @@ var gameController = (function(userInterface, model) {
     };
 
     var submitHandler = function(e) {
-      if (gameInfo.gameOver === false) {
+    
 
         var enteredLetter = document.getElementById(dom.guessInput).value.toUpperCase();
         //if letter has not been guessed
@@ -178,8 +176,10 @@ var gameController = (function(userInterface, model) {
             userInterface.displayMatches(letterIndexes, dom.letter);
             //if there are no letters left to guess
             if (gameInfo.lettersLeft === 0) {
-              userInterface.displayGameMessage('You Win');
+
               //display restart
+              userInterface.displayGameMessage('You Win');  //argument is passed in from top execution context
+              document.getElementById('submit-button').removeEventListener('click', submitHandler, false);
               document.querySelectorAll('.info, #hint-field').forEach(function(el) {
                 el.classList.add('hide');
               });
@@ -188,11 +188,10 @@ var gameController = (function(userInterface, model) {
               document.querySelector('.input-contents').style.display = "none";
               var restartEl = document.getElementById('restart-field');
               restartEl.style.display = 'block';
-
               restartEl.innerHTML =
               '<label class="restart-button">Click to start a new game:</label><button id="restart-button">restart</button>';
               gameInfo.gameOver = true;
-              //
+              //end function
             }
             //if letter is not in word
           } else if (letterIndexes.length === 0) {
@@ -202,11 +201,14 @@ var gameController = (function(userInterface, model) {
             //if no more guesses left
             if (gameInfo.guessesLeft === 0) {
 
-              document.getElementById('submit-button').removeEventListener('click', submitHandler, false);
-              userInterface.displayGameMessage('Game Over');
+              // document.getElementById('submit-button').removeEventListener('click', submitHandler, false);
               userInterface.displayAllLetters(dom.letter);
+
               //insert
+
               //display restart
+              userInterface.displayGameMessage('Game Over');
+              document.getElementById('submit-button').removeEventListener('click', submitHandler, false);
               document.querySelectorAll('.info, #hint-field').forEach(function(el) {
                 el.classList.add('hide');
               });
@@ -215,17 +217,14 @@ var gameController = (function(userInterface, model) {
               document.querySelector('.input-contents').style.display = "none";
               var restartEl = document.getElementById('restart-field');
               restartEl.style.display = 'block';
-
               restartEl.innerHTML =
               '<label class="restart-button">Click to start a new game:</label><button id="restart-button">restart</button>';
-              //end insert
               gameInfo.gameOver = true;
-
+              //end function
             }
           }
         }
        if (!gameInfo.gameOver) userInterface.setupInput(dom.guessInput);
-      }
     };
 
     document.getElementById(dom.submitButton)
@@ -240,7 +239,6 @@ var gameController = (function(userInterface, model) {
   };
 
   var playGame = function() {
-
      var guessNumber = 1;
       var currentGame = model.createGame(model.selectAnswer(), guessNumber);
       console.log(currentGame);
