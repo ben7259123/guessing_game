@@ -207,6 +207,10 @@ p {
 	padding-top: 0px;
 }
 
+.error {
+	color: red;
+}
+
 /*ADD CLASS TO HTML FOR MOBILE PHONES TO DISABLE*/
 #hint:hover {
   color: #ba68c8;

@@ -70,7 +70,8 @@ var gameUI = (function() {
     letterInput: '.letter-input',
     zeroPadding: 'zero-padding',
     inputContents: '.input-contents',
-    restartField: 'restart-field'
+    restartField: 'restart-field',
+    labelMessage: 'label-message'
   };
 
   var displaySquares = function(wordLength) {
@@ -85,7 +86,7 @@ var gameUI = (function() {
     for (var i = 0; i < letterContainers.length; i++) {
       var letterHTML = '<span class="letter">' + word.charAt(i) + '</span';
       letterContainers[i].innerHTML = letterHTML;
-      letterContainers[i].firstElementChild.style.visibility = "hidden";
+      letterContainers[i].firstElementChild.classList.add('hide');
     }
   };
 
@@ -96,7 +97,7 @@ var gameUI = (function() {
   var displayMatches = function(indexes, allLetters) {
     var letterEls = document.querySelectorAll(allLetters);
     indexes.forEach(function(index) {
-      letterEls[index].style.visibility = "visible";
+      letterEls[index].classList.remove('hide');
     });
   };
 
@@ -106,9 +107,9 @@ var gameUI = (function() {
     guessInput.focus();
   };
 
-  var displayAllLetters = function(domString) {
-    document.querySelectorAll(domString).forEach(function(letter) {
-      if (letter.style.visibility === 'hidden') letter.style.visibility = 'visible';
+  var displayAllLetters = function(allLetters) {
+    document.querySelectorAll(allLetters).forEach(function(letter) {
+      if (letter.classList.contains('hide')) letter.classList.remove('hide');
     });
   };
 
@@ -123,7 +124,7 @@ var gameUI = (function() {
     var letterInput = document.querySelector(domStrings.letterInput);
     letterInput.classList.add(domStrings.zeroPadding);
     document.querySelector(domStrings.inputContents).style.display = "none";
-    var restartEl = document.getElementById('restart-field');
+    var restartEl = document.getElementById(domStrings.restartField);
     restartEl.style.display = 'block';
     restartEl.innerHTML =
     '<label class="restart-button">Click to start a new game:</label><button id="restart-button">restart</button>';
@@ -142,6 +143,16 @@ var gameUI = (function() {
     '<p id="hint-field">click <span id="hint">here</span> for a hint</p>';
   };
 
+  var checkEntryInput = function(input) {
+    if (!input.match(/[a-z]/i)) {
+      return 'entry must be a letter';
+    } else if (input.length !== 1) {
+      return 'entry must be only one character';
+    } else {
+      return null;
+    }
+  };
+
 
   return {
     displayBoard: function(name) {
@@ -157,14 +168,23 @@ var gameUI = (function() {
     displayGameMessage: function(message) {
       displayContent(domStrings.title, message);
     },
+    displayLabelMessage: function(message) {
+      document.getElementById(domStrings.labelMessage).classList.remove('error');
+      displayContent(domStrings.labelMessage, message);
+    },
     returnDomStrings: function() {
       return domStrings;
+    },
+    setupErrorMessage: function(message) {
+      displayContent(domStrings.labelMessage, message);
+      document.getElementById(domStrings.labelMessage).classList.add('error');
     },
     displayMatches: displayMatches,
     displayAllLetters: displayAllLetters,
     setupInput: setupInput,
     displayRestart: displayRestart,
-    displayNewGame: displayNewGame
+    displayNewGame: displayNewGame,
+    checkEntryInput: checkEntryInput
   };
 })();
 
@@ -187,15 +207,23 @@ var gameController = (function(userInterface, model) {
 
     var submitHandler = function(e) {
       var enteredLetter = document.getElementById(dom.guessInput).value.toUpperCase();
-      //if letter has not been guessed
-      if (!gameInfo.checkGuessedLetters(enteredLetter)) {
-        var endGame = function(gameMessage) {
-          document.getElementById(dom.submitButton).removeEventListener('click', submitHandler, false);
-          userInterface.displayGameMessage(gameMessage);
-          userInterface.displayRestart();
-          gameInfo.gameOver = true;
-        };
+      var invalidEntryMessage = userInterface.checkEntryInput(enteredLetter);
+      var endGame = function(gameMessage) {
+        document.getElementById(dom.submitButton).removeEventListener('click', submitHandler, false);
+        userInterface.displayGameMessage(gameMessage);
+        userInterface.displayRestart();
+        gameInfo.gameOver = true;
+      };
 
+      if (gameInfo.checkGuessedLetters(enteredLetter)) {
+        userInterface.setupErrorMessage('letter has already been guessed');
+      } else if (invalidEntryMessage) {
+        userInterface.setupErrorMessage(invalidEntryMessage);
+      } else {
+        var labelMessage = document.getElementById(dom.labelMessage);
+        if (labelMessage.classList.contains('error')) {
+          userInterface.displayLabelMessage('Enter a Letter');
+        }
         gameInfo.guessedLetters.push(enteredLetter);
         var letterIndexes = gameInfo.searchForLetter(enteredLetter, gameInfo.name);
         //if letter is in the word
